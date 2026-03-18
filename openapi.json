@@ -7,8 +7,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8000",
-      "description": "로컬 개발 서버"
+      "url": "https://smartall-chatgpt-aapps.onrender.com",
+      "description": "Render 배포 서버"
     }
   ],
   "paths": {
