@@ -1,0 +1,107 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "스마트올 무료 체험 신청 API",
+    "description": "스마트올 무료 체험 신청 폼 조회 및 신청 접수를 위한 API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "로컬 개발 서버"
+    }
+  ],
+  "paths": {
+    "/app": {
+      "get": {
+        "operationId": "getApplicationForm",
+        "summary": "무료 체험 신청 폼 조회",
+        "description": "스마트올 무료 체험 신청에 필요한 폼 필드 정보를 JSON으로 반환합니다.",
+        "responses": {
+          "200": {
+            "description": "신청 폼 정보",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "title": { "type": "string" },
+                    "fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": { "type": "string" },
+                          "label": { "type": "string" },
+                          "type": { "type": "string" },
+                          "required": { "type": "boolean" },
+                          "options": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apply": {
+      "post": {
+        "operationId": "submitApplication",
+        "summary": "무료 체험 신청 접수",
+        "description": "이름, 학년, 연락처를 입력받아 무료 체험 신청을 접수합니다.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "grade", "phone"],
+                "properties": {
+                  "name": { "type": "string", "description": "신청자 이름" },
+                  "grade": { "type": "string", "description": "학년 (예: 초1, 중2)" },
+                  "phone": { "type": "string", "description": "연락처 (예: 010-1234-5678)" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "신청 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "입력값 누락",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

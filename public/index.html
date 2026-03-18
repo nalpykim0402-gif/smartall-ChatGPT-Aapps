@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>스마트올 무료 체험 신청</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh; display: flex; justify-content: center; align-items: center;
+      padding: 20px;
+    }
+    .card {
+      background: #fff; border-radius: 20px; padding: 44px 36px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15); width: 100%; max-width: 440px;
+    }
+    .logo { text-align: center; font-size: 2.4rem; margin-bottom: 4px; }
+    h1 { text-align: center; color: #1a202c; font-size: 1.4rem; margin-bottom: 6px; }
+    .desc { text-align: center; color: #718096; font-size: 0.88rem; margin-bottom: 32px; line-height: 1.5; }
+    .field { margin-bottom: 20px; }
+    .field label { display: block; color: #4a5568; font-weight: 600; font-size: 0.85rem; margin-bottom: 6px; }
+    .field input, .field select {
+      width: 100%; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 12px;
+      font-size: 0.95rem; transition: border-color 0.2s, box-shadow 0.2s;
+      background: #f7fafc; color: #2d3748;
+    }
+    .field input:focus, .field select:focus {
+      outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+      background: #fff;
+    }
+    .field input::placeholder { color: #a0aec0; }
+    .btn {
+      width: 100%; padding: 14px; border: none; border-radius: 12px;
+      font-size: 1.05rem; font-weight: 700; cursor: pointer; margin-top: 8px;
+      background: linear-gradient(135deg, #667eea, #764ba2); color: #fff;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(102,126,234,0.35); }
+    .btn:active { transform: translateY(0); }
+    .notice { text-align: center; color: #a0aec0; font-size: 0.75rem; margin-top: 16px; }
+    .result {
+      margin-top: 20px; padding: 16px; border-radius: 12px; text-align: center;
+      font-size: 0.92rem; line-height: 1.6; display: none; animation: fadeIn 0.3s;
+    }
+    .result.success { background: #f0fff4; color: #276749; border: 1px solid #c6f6d5; display: block; }
+    .result.error { background: #fff5f5; color: #9b2c2c; border: 1px solid #fed7d7; display: block; }
+    .result .emoji { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+    .result .detail { font-size: 0.82rem; color: #718096; margin-top: 4px; }
+    .summary { background: #f7fafc; border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.82rem; color: #4a5568; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">📚</div>
+    <h1>스마트올 무료 체험 신청</h1>
+    <p class="desc">우리 아이에게 딱 맞는 학습을<br>무료로 체험해보세요!</p>
+
+    <form id="applyForm">
+      <div class="field">
+        <label for="name">자녀 이름</label>
+        <input type="text" id="name" placeholder="이름을 입력해주세요" required>
+      </div>
+      <div class="field">
+        <label for="grade">학년 선택</label>
+        <select id="grade" required>
+          <option value="">학년을 선택해주세요</option>
+          <option value="초1">초등 1학년</option>
+          <option value="초2">초등 2학년</option>
+          <option value="초3">초등 3학년</option>
+          <option value="초4">초등 4학년</option>
+          <option value="초5">초등 5학년</option>
+          <option value="초6">초등 6학년</option>
+          <option value="중1">중등 1학년</option>
+          <option value="중2">중등 2학년</option>
+          <option value="중3">중등 3학년</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="phone">보호자 연락처</label>
+        <input type="tel" id="phone" placeholder="010-0000-0000" required>
+      </div>
+      <button type="submit" class="btn">🎓 무료 체험 시작하기</button>
+    </form>
+    <p class="notice">🔒 입력하신 정보는 체험 안내 목적으로만 사용됩니다.</p>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    document.getElementById('applyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const resultDiv = document.getElementById('result');
+      resultDiv.className = 'result';
+      resultDiv.style.display = 'none';
+
+      const body = {
+        name: document.getElementById('name').value.trim(),
+        grade: document.getElementById('grade').value,
+        phone: document.getElementById('phone').value.trim()
+      };
+
+      try {
+        const res = await fetch('/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          resultDiv.className = 'result success';
+          resultDiv.innerHTML = `
+            <span class="emoji">${data.emoji}</span>
+            ${data.message}
+            <div class="detail">${data.detail}</div>
+            <div class="summary">📋 ${data.summary.name} | ${data.summary.grade} | ${data.summary.phone}</div>
+          `;
+          e.target.reset();
+        } else {
+          resultDiv.className = 'result error';
+          resultDiv.innerHTML = `<span class="emoji">${data.emoji}</span>${data.message}`;
+        }
+      } catch {
+        resultDiv.className = 'result error';
+        resultDiv.innerHTML = '<span class="emoji">😵</span>서버 연결에 실패했어요. 잠시 후 다시 시도해주세요.';
+      }
+    });
+  </script>
+</body>
+</html>
