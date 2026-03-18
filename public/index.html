@@ -3,93 +3,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>스마트올 무료 체험 신청</title>
+  <title>체험 상담 신청</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh; display: flex; justify-content: center; align-items: center;
-      padding: 20px;
-    }
-    .card {
-      background: #fff; border-radius: 20px; padding: 44px 36px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15); width: 100%; max-width: 440px;
-    }
-    .logo { text-align: center; font-size: 2.4rem; margin-bottom: 4px; }
-    h1 { text-align: center; color: #1a202c; font-size: 1.4rem; margin-bottom: 6px; }
-    .desc { text-align: center; color: #718096; font-size: 0.88rem; margin-bottom: 32px; line-height: 1.5; }
-    .field { margin-bottom: 20px; }
-    .field label { display: block; color: #4a5568; font-weight: 600; font-size: 0.85rem; margin-bottom: 6px; }
-    .field input, .field select {
-      width: 100%; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 12px;
-      font-size: 0.95rem; transition: border-color 0.2s, box-shadow 0.2s;
-      background: #f7fafc; color: #2d3748;
-    }
-    .field input:focus, .field select:focus {
-      outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
-      background: #fff;
-    }
-    .field input::placeholder { color: #a0aec0; }
-    .btn {
-      width: 100%; padding: 14px; border: none; border-radius: 12px;
-      font-size: 1.05rem; font-weight: 700; cursor: pointer; margin-top: 8px;
-      background: linear-gradient(135deg, #667eea, #764ba2); color: #fff;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(102,126,234,0.35); }
-    .btn:active { transform: translateY(0); }
-    .notice { text-align: center; color: #a0aec0; font-size: 0.75rem; margin-top: 16px; }
-    .result {
-      margin-top: 20px; padding: 16px; border-radius: 12px; text-align: center;
-      font-size: 0.92rem; line-height: 1.6; display: none; animation: fadeIn 0.3s;
-    }
+    body { font-family: -apple-system, 'Malgun Gothic', sans-serif; background: #f5f5f5; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 16px; }
+    .modal { background: #fff; width: 100%; max-width: 480px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #f0f0f0; }
+    .modal-header h1 { font-size: 1.15rem; color: #222; font-weight: 700; }
+    .modal-header .close { background: none; border: none; font-size: 1.4rem; color: #999; cursor: pointer; padding: 4px; }
+    .modal-body { padding: 28px 24px; }
+
+    .section { margin-bottom: 28px; }
+    .section-title { font-size: 0.95rem; font-weight: 700; color: #222; margin-bottom: 12px; }
+    .section-title .sub { font-size: 0.75rem; font-weight: 400; color: #999; margin-left: 4px; }
+
+    .counsel-box { display: flex; align-items: center; gap: 12px; border: 2px solid #f5a623; border-radius: 12px; padding: 16px 18px; cursor: pointer; }
+    .counsel-icon { width: 32px; height: 32px; background: #f5a623; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 1.1rem; }
+    .counsel-label { font-size: 0.92rem; color: #333; font-weight: 600; }
+
+    .radio-group { display: flex; gap: 10px; }
+    .radio-card { flex: 1; border: 2px solid #e8e8e8; border-radius: 12px; padding: 18px 14px; cursor: pointer; transition: border-color 0.2s; }
+    .radio-card.active { border-color: #f5a623; }
+    .radio-card input { display: none; }
+    .radio-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .radio-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; }
+    .radio-card.active .radio-dot { border-color: #f5a623; }
+    .radio-dot::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: transparent; }
+    .radio-card.active .radio-dot::after { background: #f5a623; }
+    .radio-title { font-size: 0.88rem; font-weight: 700; color: #222; }
+    .radio-desc { font-size: 0.75rem; color: #999; line-height: 1.4; padding-left: 26px; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; color: #333; margin-bottom: 6px; }
+    .field input, .field select { width: 100%; padding: 12px 14px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 0.92rem; color: #333; background: #fff; transition: border-color 0.2s; }
+    .field input:focus, .field select:focus { outline: none; border-color: #f5a623; }
+    .field input::placeholder { color: #bbb; }
+
+    .submit-btn { width: 100%; padding: 16px; border: none; border-radius: 12px; background: #fff3e0; color: #f5a623; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
+    .submit-btn:hover { background: #ffe8c8; }
+
+    .result { margin-top: 16px; padding: 16px; border-radius: 12px; text-align: center; font-size: 0.9rem; line-height: 1.6; display: none; animation: fadeIn 0.3s; }
     .result.success { background: #f0fff4; color: #276749; border: 1px solid #c6f6d5; display: block; }
     .result.error { background: #fff5f5; color: #9b2c2c; border: 1px solid #fed7d7; display: block; }
-    .result .emoji { font-size: 1.8rem; display: block; margin-bottom: 8px; }
-    .result .detail { font-size: 0.82rem; color: #718096; margin-top: 4px; }
-    .summary { background: #f7fafc; border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.82rem; color: #4a5568; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="logo">📚</div>
-    <h1>스마트올 무료 체험 신청</h1>
-    <p class="desc">우리 아이에게 딱 맞는 학습을<br>무료로 체험해보세요!</p>
+  <div class="modal">
+    <div class="modal-header">
+      <h1>체험 상담 신청</h1>
+      <button class="close" aria-label="닫기">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="applyForm">
+        <div class="section">
+          <div class="section-title">상담분야</div>
+          <div class="counsel-box">
+            <div class="counsel-icon">A</div>
+            <span class="counsel-label">웅진스마트올 전 과목 종합학습</span>
+          </div>
+        </div>
 
-    <form id="applyForm">
-      <div class="field">
-        <label for="name">자녀 이름</label>
-        <input type="text" id="name" placeholder="이름을 입력해주세요" required>
-      </div>
-      <div class="field">
-        <label for="grade">학년 선택</label>
-        <select id="grade" required>
-          <option value="">학년을 선택해주세요</option>
-          <option value="초1">초등 1학년</option>
-          <option value="초2">초등 2학년</option>
-          <option value="초3">초등 3학년</option>
-          <option value="초4">초등 4학년</option>
-          <option value="초5">초등 5학년</option>
-          <option value="초6">초등 6학년</option>
-          <option value="중1">중등 1학년</option>
-          <option value="중2">중등 2학년</option>
-          <option value="중3">중등 3학년</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="phone">보호자 연락처</label>
-        <input type="tel" id="phone" placeholder="010-0000-0000" required>
-      </div>
-      <button type="submit" class="btn">🎓 무료 체험 시작하기</button>
-    </form>
-    <p class="notice">🔒 입력하신 정보는 체험 안내 목적으로만 사용됩니다.</p>
+        <div class="section">
+          <div class="section-title">학습형태 선택 <span class="sub">*학습 대상 연령 : 4세(23년생)이상</span></div>
+          <div class="radio-group">
+            <label class="radio-card active" id="card-self">
+              <input type="radio" name="studyType" value="혼자학습" checked>
+              <div class="radio-top">
+                <span class="radio-dot"></span>
+                <span class="radio-title">혼자 학습을 원해요</span>
+              </div>
+              <div class="radio-desc">전문 교육 컨설턴트의 월 4회 전화 학습 코칭</div>
+            </label>
+            <label class="radio-card" id="card-visit">
+              <input type="radio" name="studyType" value="방문학습">
+              <div class="radio-top">
+                <span class="radio-dot"></span>
+                <span class="radio-title">교사 방문 학습을 원해요</span>
+              </div>
+              <div class="radio-desc">주 1회 교사 방문 학습과 학부모 상담</div>
+            </label>
+          </div>
+        </div>
 
-    <div id="result" class="result"></div>
+        <div class="section">
+          <div class="section-title">신청 정보</div>
+          <div class="field">
+            <label for="name">자녀 이름</label>
+            <input type="text" id="name" placeholder="이름을 입력해주세요" required>
+          </div>
+          <div class="field">
+            <label for="grade">학년</label>
+            <select id="grade" required>
+              <option value="">학년을 선택해주세요</option>
+              <option value="초1">초등 1학년</option>
+              <option value="초2">초등 2학년</option>
+              <option value="초3">초등 3학년</option>
+              <option value="초4">초등 4학년</option>
+              <option value="초5">초등 5학년</option>
+              <option value="초6">초등 6학년</option>
+              <option value="중1">중등 1학년</option>
+              <option value="중2">중등 2학년</option>
+              <option value="중3">중등 3학년</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="phone">보호자 연락처</label>
+            <input type="tel" id="phone" placeholder="010-0000-0000" required>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">신청완료</button>
+      </form>
+      <div id="result" class="result"></div>
+    </div>
   </div>
 
   <script>
+    // 라디오 카드 토글
+    document.querySelectorAll('.radio-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+      });
+    });
+
+    // 폼 제출
     document.getElementById('applyForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const resultDiv = document.getElementById('result');
@@ -99,7 +138,8 @@
       const body = {
         name: document.getElementById('name').value.trim(),
         grade: document.getElementById('grade').value,
-        phone: document.getElementById('phone').value.trim()
+        phone: document.getElementById('phone').value.trim(),
+        studyType: document.querySelector('input[name="studyType"]:checked').value
       };
 
       try {
@@ -109,23 +149,19 @@
           body: JSON.stringify(body)
         });
         const data = await res.json();
-
         if (data.success) {
           resultDiv.className = 'result success';
-          resultDiv.innerHTML = `
-            <span class="emoji">${data.emoji}</span>
-            ${data.message}
-            <div class="detail">${data.detail}</div>
-            <div class="summary">📋 ${data.summary.name} | ${data.summary.grade} | ${data.summary.phone}</div>
-          `;
+          resultDiv.innerHTML = `${data.emoji} ${data.message}<br><span style="font-size:0.82rem;color:#718096">${data.detail}</span>`;
           e.target.reset();
+          document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
+          document.getElementById('card-self').classList.add('active');
         } else {
           resultDiv.className = 'result error';
-          resultDiv.innerHTML = `<span class="emoji">${data.emoji}</span>${data.message}`;
+          resultDiv.textContent = data.message;
         }
       } catch {
         resultDiv.className = 'result error';
-        resultDiv.innerHTML = '<span class="emoji">😵</span>서버 연결에 실패했어요. 잠시 후 다시 시도해주세요.';
+        resultDiv.textContent = '서버 연결에 실패했어요. 잠시 후 다시 시도해주세요.';
       }
     });
   </script>
