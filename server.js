@@ -1,9 +1,15 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 루트 경로 명시적 처리
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // GET /app - 신청 폼 JSON 반환
 app.get('/app', (req, res) => {
